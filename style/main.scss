@@ -1,0 +1,60 @@
+$text-color: white;
+
+@mixin flexBoxStyling($height, $justify) {
+  height: $height;
+  display: flex;
+  justify-content: $justify;
+  align-items: center;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  @include flexBoxStyling(100vh, center);
+  flex-direction: column;
+  color: $text-color;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: #b92b27; /* fallback for old browsers */
+  background: -webkit-linear-gradient(
+    to right,
+    #1565c0,
+    #b92b27
+  ); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    to right,
+    #1565c0,
+    #b92b27
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.location,
+.temperature {
+  @include flexBoxStyling(30vh, space-around);
+}
+
+.location {
+  .icon {
+    margin-left: 15px;
+  }
+}
+.temperature {
+  flex-direction: column;
+}
+
+.degree-section {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+
+  span {
+    margin: 10px;
+    font-size: 30px;
+  }
+  h2 {
+    font-size: 40px;
+  }
+}
