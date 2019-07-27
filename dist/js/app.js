@@ -24,11 +24,17 @@ window.addEventListener("load", () => {
         .then(data => {
           console.log(data);
           const { temperature, summary, icon } = data.currently;
+          let location = data.timezone;
+
+          console.log(typeof location);
           //Set DOM Elements from the API
           console.log(temperature);
-          temperatureDegree.textContent = temperature;
+          temperatureDegree.textContent = Math.floor(temperature);
           temperatureDescription.textContent = summary;
-          locationTimezone.textContent = data.timezone;
+          locationTimezone.textContent = location
+            .split("/")
+            .pop()
+            .replace(/_/g, " ");
           //Set Icons
           setIcons(icon, document.querySelector(".icon"));
 
@@ -41,7 +47,7 @@ window.addEventListener("load", () => {
               temperatureDegree.textContent = Math.floor(celisusDegree);
             } else {
               temeperatureSpan.textContent = "F";
-              temperatureDegree.textContent = temperature;
+              temperatureDegree.textContent = Math.floor(temperature);
             }
           });
         });
