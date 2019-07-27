@@ -3,13 +3,16 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "homepage": "https://louiskwt.github.io/js-weatherapp/index.html",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "scss": "node-sass -w scss/ -o dist/css/ --recursive"
+    "scss": "node-sass -w scss/ -o dist/css/ --recursive",
+    "deploy": "gh-pages -d dist"
   },
   "author": "Louis",
   "license": "ISC",
   "dependencies": {
+    "gh-pages": "^2.0.1",
     "sass": "^1.22.7"
   }
 }
