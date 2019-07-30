@@ -4,60 +4,85 @@ window.addEventListener("load", () => {
   let temperatureDescription = document.querySelector(
     ".temperature-description"
   );
-  let temperatureDegree = document.querySelector(".temperature-degree");
-  let locationTimezone = document.querySelector(".location-timezone");
-  let temperatureSection = document.querySelector(".degree-section");
-  let temeperatureSpan = document.querySelector(".degree-section span");
 
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(position => {
       long = position.coords.longitude;
       lat = position.coords.latitude;
 
-      const proxy = "https://cors-anywhere.herokuapp.com/";
-      const api = `${proxy}https://api.darksky.net/forecast/110b1a1dc320e83b631ead2ad93c4acd/${lat},${long}`;
+      let proxy = "https://cors-anywhere.herokuapp.com/";
+      let api = `${proxy}https://api.darksky.net/forecast/110b1a1dc320e83b631ead2ad93c4acd/${lat},${long}`;
 
       fetch(api)
         .then(response => {
           return response.json();
         })
         .then(data => {
-          console.log(data);
           const { temperature, summary, icon } = data.currently;
-          let location = data.timezone;
+          const location = data.timezone;
+          const celisusDegree = (temperature - 32) * (5 / 9);
 
-          console.log(typeof location);
           //Set DOM Elements from the API
-          console.log(temperature);
-          temperatureDegree.textContent = Math.floor(temperature);
+
           temperatureDescription.textContent = summary;
-          locationTimezone.textContent = location
-            .split("/")
-            .pop()
-            .replace(/_/g, " ");
+
+          setDeafultTemperature(
+            celisusDegree,
+            document.querySelector(".temperature-degree")
+          );
+
+          changeToF(
+            celisusDegree,
+            document.querySelector(".temperature-degree")
+          );
+
+          setLocation(location, document.querySelector(".location-timezone"));
+
           //Set Icons
           setIcons(icon, document.querySelector(".icon"));
-
-          //Formula for degree
-          let celisusDegree = (temperature - 32) * (5 / 9);
-          //Change temperature to Celsius / Farenheit
-          temperatureSection.addEventListener("click", () => {
-            if (temeperatureSpan.textContent === "F") {
-              temeperatureSpan.textContent = "C";
-              temperatureDegree.textContent = Math.floor(celisusDegree);
-            } else {
-              temeperatureSpan.textContent = "F";
-              temperatureDegree.textContent = Math.floor(temperature);
-            }
-          });
         });
     });
+  } else {
+    //error handling
+    alert("Please allow the use of your location");
   }
 
+  //Refactored Functions
   function setIcons(icon, iconID) {
     const skycons = new Skycons({ color: "white" });
     const currentIcon = icon.replace(/-/g, "_").toUpperCase();
     skycons.play();
     return skycons.set(iconID, Skycons[currentIcon]);
+  }
+
+  function setLocation(location, locationTimezone) {
+    const cleanLocation = location
+      .split("/")
+      .pop()
+      .replace(/_/g, " ");
+    return (locationTimezone.textContent = cleanLocation);
+  }
+
+  function setDeafultTemperature(celisusDegree, defaultTemp) {
+    const temp = Math.floor(celisusDegree);
+    return (defaultTemp.textContent = temp);
+  }
+
+  function changeToF(celisusDegree, fTemp) {
+    const temperatureSection = document.querySelector(".degree-section");
+    const temeperatureSpan = document.querySelector(".degree-section span");
+    const convertF = Math.floor(celisusDegree * (9 / 5) + 32);
+    temperatureSection.addEventListener("click", () => {
+      if (temeperatureSpan.textContent === "C") {
+        temeperatureSpan.textContent = "F";
+        return (fTemp.textContent = convertF);
+      } else {
+        temeperatureSpan.textContent = "C";
+        setDeafultTemperature(
+          celisusDegree,
+          document.querySelector(".temperature-degree")
+        );
+      }
+    });
   }
 });
